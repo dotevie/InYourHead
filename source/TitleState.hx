@@ -1,5 +1,8 @@
 package;
 
+import lime.utils.Assets;
+import flxgif.FlxGifSprite;
+import ui.GameUI;
 import backend.AdaptiveAudioManager;
 import flixel.util.FlxColor;
 import flixel.FlxG;
@@ -9,6 +12,7 @@ import backend.CustomTypedText;
 class TitleState extends BaseState
 {
 	public var titleText:FlxText;
+	public var gameui:GameUI;
 	override public function create()
 	{
 		AdaptiveAudioManager.configure([
@@ -19,19 +23,15 @@ class TitleState extends BaseState
 			"assets/music/Track5.ogg"			
 		]);
 		super.create();
-		// var ctt = new CustomTypedText(10, 10, 0, "What's the deal with airline food? It's <shake>completely terrible!", 32, false);
-		// ctt.camera = uiCamera;
-		// ctt.skipKeys = [Z];
-		// ctt.font = "assets/fonts/OpenSans.ttf";
-		// ctt.delay = 0.04;
-		// ctt.useDefaultSound = true;
-		// ctt.tagCallback = onTag;
-		// add(ctt);
-		// ctt.start();
-		var gameui = new ui.GameUI();
+		gameui = new GameUI();
 		add(gameui);
-		gameui.playNext();
-		AdaptiveAudioManager.play();
+		gameui.loadMetaContainer("KevinIntro");
+		gameui.fadeIn(gameui.playNext);
+		//AdaptiveAudioManager.play();
+	}
+
+	function doFadeOut() {
+		gameui.fadeOut(AdaptiveAudioManager.play);
 	}
 
     function onTag(n) {

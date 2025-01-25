@@ -1,0 +1,16 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name":"Jin",
+            "text":"My name is Jin, and you're about to see me in for the biggest surprise of my life.",
+            "isChoice":false
+        },
+        {
+            "name":"Jin",
+            "text":"We're in for a <shake:ui:0.05:0.15><sound:Explosion>rough time.",
+            "isChoice":false,
+            "callback": "doFadeOut"
+        }
+    ]
+}

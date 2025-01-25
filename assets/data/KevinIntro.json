@@ -1,0 +1,40 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name": "Kevin",
+            "text": "Jin! It's good to see you."
+        },
+        {
+            "name": "Kevin",
+            "text": "I was doing inspections on your apartment today and noticed nobody was home."
+        },
+        {
+            "name": "Kevin",
+            "text": "I know you were on a trip, but where was Allie?"
+        },
+        {
+            "name": "Kevin",
+            "text": "She should have been here, you guys know I do inspections.",
+            "isChoice": true,
+            "thought": "They're usually fine on inspections. Whatever, I get to charge more!",
+            "choices": [
+                {
+                    "text": "Allie wasn't home?",
+                    "correct": false,
+                    "wrongAnswer": "No, she wasn't."
+                },
+                {
+                    "text": "Don't you usually text us in advance?",
+                    "correct": true,
+                    "nextContainer": "KevinRight1"
+                },
+                {
+                    "text": "I just got back, please don't do this to me.",
+                    "correct": false,
+                    "wrongAnswer": "Couldn't do them anyways, nobody was home."
+                }
+            ]
+        }
+    ]
+}

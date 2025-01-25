@@ -1,5 +1,10 @@
 package ui;
 
+import flixel.math.FlxMath;
+import flixel.tweens.FlxTween;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import openfl.Assets;
+import haxe.Json;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.FlxG;
@@ -21,14 +26,17 @@ typedef Filename = String;
 typedef MetaText = {
     name:String,
     text:TaggedText,
-    isChoice:Bool,
-    ?choice:Array<Choice>
+    ?isChoice:Bool,
+    ?thought:String,
+    ?choices:Array<Choice>,
+    ?callback:String
 };
 
 typedef Choice = {
-    text:TaggedText,
+    text:String,
     correct:Bool,
-    nextTree:Filename // e.g. "NextTree.json"
+    ?wrongAnswer:TaggedText,
+    ?nextContainer:Filename // e.g. "NextTree" for assets/data/NextTree.json
 };
 
 typedef MetaTextContainer = {
@@ -37,43 +45,58 @@ typedef MetaTextContainer = {
 };
 
 @:access(backend.CustomTypedText)
-class GameUI extends FlxGroup {
+class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
     var nameField:FlxText;
     var gameText:CustomTypedText;
     var metaContainer:MetaTextContainer;
     var currentMeta:MetaText;
     var nextTriangle:FlxSprite;
+    var textbox:FlxSprite;
+    var nameSprite:FlxSprite;
+    var alphaTween:FlxTween;
+    var choices:Array<FlxText> = [null, null, null];
+    var lerps:Array<Float> = [FlxG.width, FlxG.width, FlxG.width];
 
     public function new(?cam:FlxCamera) {
         super();
         camera = cam ?? BaseState.current.uiCamera;
-		gameText = new CustomTypedText(FlxG.width * 0.2, FlxG.height - 142, Std.int(FlxG.width * 0.6), "", 32, false);
-        gameText.setFormat("assets/fonts/OpenSans.ttf", 32, FlxColor.WHITE, LEFT);
-        gameText.delay = 0.04;
+        alpha = 0;
+        choices[1] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, RIGHT);
+        choices[1].screenCenter(Y);
+        choices[0] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, RIGHT);
+        choices[0].y = choices[1].y - choices[0].height - 16;
+        choices[2] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, RIGHT);
+        choices[2].y = choices[1].y + choices[0].height +  16;
+        add(choices[0]);
+        add(choices[1]);
+        add(choices[2]);
+        textbox = new FlxSprite().loadGraphic("assets/images/textBox.png");
+        textbox.screenCenter(X);
+        textbox.y = FlxG.height - textbox.height - 16;
+        add(textbox);
+        nameSprite = new FlxSprite(96).loadGraphic("assets/images/nameTag.png");
+        nameSprite.scale *= 0.5;
+        nameSprite.updateHitbox();
+        nameSprite.y = textbox.y - nameSprite.height + 48;
+        add(nameSprite);
+        nameField = new FlxText(nameSprite.x, 0, nameSprite.width).setFormat("assets/fonts/CaveatBrush.ttf", 48, 0xff333333, CENTER);
+        nameField.y = nameSprite.y + (nameSprite.height / 2) - (nameField.height / 2);
+        add(nameField);
+		gameText = new CustomTypedText(FlxG.width * 0.1, FlxG.height * 0.75, Std.int(FlxG.width * 0.8), "", 32, false);
+        gameText.setFormat("assets/fonts/CaveatBrush.ttf", 48, 0xff1f1f1f, LEFT);
+        gameText.fieldHeight = 140;
+        gameText.y = textbox.y + (textbox.height / 2) - (gameText.fieldHeight / 2) + 10;
+        gameText.delay = 0.035;
         gameText.useDefaultSound = true;
         gameText.tagCallback = onTag;
         gameText.completeCallback = onTextComplete;
         gameText._finalText = "My name is Jin, and you're about to see me in for the biggest surprise of my life.";
         add(gameText);
-        nextTriangle = new FlxSprite(FlxG.width * .8 + 32, FlxG.height - 52).makeGraphic(16, 16, 0).drawTriangle(0,0,16);
+        nextTriangle = new FlxSprite(FlxG.width * .8 + 32, FlxG.height - 52).makeGraphic(16, 16, 0).drawTriangle(0,0,16, 0xff333333);
+        nextTriangle.y = textbox.y + textbox.height - 64;
         nextTriangle.angle = 90;
         nextTriangle.alpha = 0;
         add(nextTriangle);
-        metaContainer = {
-            cacheFiles: [],
-            texts: [
-                {
-                    name:"Jin",
-                    text:"My name is Jin, and you're about to see me in for the biggest surprise of my life.",
-                    isChoice:false
-                },
-                {
-                    name:"Jin",
-                    text:"We're in for a <shake:ui:0.05:0.15><sound:Explosion>rough time.",
-                    isChoice:false
-                },
-            ]
-        };
         for (i in members) {
             if (i is FlxSprite) {
                 cast (i, FlxSprite).scrollFactor.set();  
@@ -81,9 +104,26 @@ class GameUI extends FlxGroup {
         }
     }
 
+    public function fadeIn(?callback:Void->Void) {
+        FlxTween.cancelTweensOf(this);
+        alpha = 0;
+        FlxTween.tween(this, {alpha: 1}, 1, {onComplete: (_) -> {
+            nextTriangle.alpha = 0;
+            if (callback != null) callback();
+        }});
+    }
+
+    public function fadeOut(?callback:Void->Void) {
+        FlxTween.cancelTweensOf(this);
+        alpha = 1;
+        nextTriangle.alpha = 0;
+        FlxTween.tween(this, {alpha: 0}, 1, {onComplete: (_) -> if (callback != null) callback()});
+    }
+
     public var inText:Bool = false;
     public function playNext() {
         inText = true;
+        nextTriangle.stopFlickering();
         //gameText.erase(0, true);
         if (metaContainer.texts.length < 1) {
             inText = false;
@@ -91,12 +131,45 @@ class GameUI extends FlxGroup {
             gameText.start(0, true);
             nextTriangle.stopFlickering();
             nextTriangle.alpha = 0.000001;
+            if (currentMeta.callback != null) {
+                var params = currentMeta.callback.split(":");
+                var name = params.shift();
+                Reflect.callMethod(BaseState.current, Reflect.field(BaseState.current, name), params);
+            }
             return;
         }
         nextTriangle.flicker(0, 0.25);
         currentMeta = metaContainer.texts.shift();
+        nameField.text = currentMeta.name;
         gameText._finalText = currentMeta.text;
-        gameText.start(0.04, true);
+        gameText.color = 0xff333333; 
+        gameText.start(0.035, true);
+    }
+
+    public function playCurrent() {
+        gameText._finalText = currentMeta.text;
+        gameText.color = 0xff333333; 
+        gameText.start(0.035, true);
+    }
+
+    var strung:Bool = false;
+    public function playString(s:String) {
+        inText = true;
+        strung = true;
+        gameText._finalText = s;
+        gameText.color = 0xff333333;
+        gameText.start(0.035, true);
+    }
+
+    public var cache:Map<String, MetaTextContainer> = [];
+
+    public function loadMetaContainer(name:String) {
+        metaContainer = cache.get(name) ?? cast {cache.set(name,Json.parse(Assets.getText('assets/data/$name.json'))); cache.get(name);};
+        for (i in metaContainer.cacheFiles) {
+            if (!cache.exists(i)) {
+                cache.set(i, cast Json.parse(Assets.getText('assets/data/$i.json')));
+            }
+        }
     }
 
     /**
@@ -121,21 +194,62 @@ class GameUI extends FlxGroup {
     }
 
     public var canProgress:Bool = false;
+    public var choosing:Bool = false;
+    private var currentChoice:Int = 0;
     public function onTextComplete() {
         trace("completed");
         if (!currentMeta.isChoice && inText) {
             canProgress = true;
             nextTriangle.alpha = 1;
+        } else if (inText && currentMeta.isChoice) {
+            if (strung) {
+                canProgress = true;
+                nextTriangle.alpha = 1;
+            } else {
+                currentChoice = 0;
+                choosing = true;
+                for (i in 0...3) {
+                    choices[i].text = currentMeta.choices[i].text;
+                    lerps[i] = FlxG.width / 2 - 16;
+                }
+            }
         }
     }
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
+        for (i in 0...3) {
+            choices[i].x = FlxMath.lerp(lerps[i], choices[i].x, 1 - (elapsed * 9));
+        }
         if (canProgress && inText && FlxG.keys.justPressed.Z) {
             canProgress = false;
             nextTriangle.alpha = 0;
             FlxG.sound.play("assets/sounds/Next.wav", 0.15);
-            playNext();  
+            if (strung) {
+                strung = false;
+                playCurrent();
+            } else playNext();  
         } 
+        if (choosing) {
+            for (i in 0...3) lerps[i] = FlxG.width / 2 - 16;
+            lerps[currentChoice] = FlxG.width / 2 - 48;
+            if (FlxG.keys.anyJustPressed([UP, LEFT]))
+                currentChoice--;
+            else if (FlxG.keys.anyJustPressed([DOWN, RIGHT]))
+                currentChoice++;
+            if (currentChoice < 0) currentChoice += 3;
+            currentChoice %= 3;
+            if (FlxG.keys.justPressed.Z) {
+                choosing = false;
+                for (i in 0...3) lerps[i] = FlxG.width;
+                if (currentMeta.choices[currentChoice].correct) {
+                    loadMetaContainer(currentMeta.choices[currentChoice].nextContainer);
+                    strung = choosing = false; // double triple check
+                    playNext();
+                } else {
+                    playString(currentMeta.choices[currentChoice].wrongAnswer);
+                }
+            }
+        }
     }
 }
