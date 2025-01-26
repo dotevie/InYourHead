@@ -1,8 +1,8 @@
 package;
 
-import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 
 
 class TitleState extends BaseState {
@@ -11,7 +11,7 @@ class TitleState extends BaseState {
 
     override public function create() {
         super.create();
-        titleText = new FlxText(10, 50, FlxG.width - 20, "In Your Head (maybe)").setFormat("assets/fonts/CaveatBrush.ttf", 96, CENTER);
+		titleText = new FlxText(10, 50, FlxG.width - 20, "In Your Head").setFormat("assets/fonts/CaveatBrush.ttf", 96, CENTER);
         pressText = new FlxText(10, 10, FlxG.width - 20, "Press Z to Start").setFormat("assets/fonts/CaveatBrush.ttf", 64, CENTER);
         pressText.y = FlxG.height - pressText.height - 50;
         titleText.camera = pressText.camera = uiCamera;

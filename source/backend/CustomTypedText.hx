@@ -9,11 +9,12 @@ package backend;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.sound.FlxSound;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText;
-import flixel.sound.FlxSound;
-import flixel.math.FlxRandom;
 import openfl.media.Sound;
+
 using StringTools;
 
 @:sound("assets/sounds/Blip.wav")
@@ -517,7 +518,7 @@ class CustomTypedText extends FlxText
 				_cursorTimer = 0;
 			}
 		}
-        helperString = helperString.split("\n").join(" ");
+		// helperString = helperString.split("\n").join(" ");
 		// If the text changed, update it.
 		if (helperString != text)
 		{

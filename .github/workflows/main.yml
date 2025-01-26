@@ -55,11 +55,11 @@ jobs:
       - name: Compile
         run: haxelib run lime build Project.xml hl
       - name: Fix Linux Run
-        run: chmod +x export/hl/bin/msmp
+        run: chmod +x export/hl/bin/InYourHead
       - name: Publish Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: msmp-linux
+          name: inyourhead-linux
           path: 'export/hl/bin'
   buildWindows:
     runs-on: windows-latest
@@ -99,7 +99,7 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: msmp-windows
+          name: inyourhead-windows
           path: export/hl/bin
   buildMac:
     runs-on: macos-13
@@ -138,10 +138,10 @@ jobs:
       - name: Compile
         run: haxelib run lime build hl
       - name: Fix Mac Run
-        run: chmod -R +x export/hl/bin/msmp.app/Contents/MacOS/
+        run: chmod -R +x export/hl/bin/InYourHead.app/Contents/MacOS/
       - name: Publish Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: msmp-mac
+          name: inyourhead-mac
           path: export/hl/bin
   

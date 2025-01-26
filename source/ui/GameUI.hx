@@ -1,20 +1,19 @@
 package ui;
 
-import flixel.math.FlxMath;
-import flixel.tweens.FlxTween;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
-import openfl.Assets;
-import haxe.Json;
-import flixel.FlxSprite;
-import flixel.util.FlxColor;
-import flixel.FlxG;
-import flixel.FlxCamera;
 import backend.CustomTypedText;
+import flixel.FlxCamera;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import flixel.group.FlxGroup;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
+import haxe.Json;
+import openfl.Assets;
 
-using flixel.util.FlxSpriteUtil;
 using StringTools;
+using flixel.util.FlxSpriteUtil;
 
 typedef TaggedText = String; // just to be clear which of them gets tags read from it
 typedef Filename = String;
@@ -56,24 +55,47 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
     var nameSprite:FlxSprite;
     var alphaTween:FlxTween;
     var choices:Array<FlxText> = [null, null, null];
-    var lerps:Array<Float> = [FlxG.width, FlxG.width, FlxG.width];
+	var lerps:Array<Float> = [-FlxG.width / 2, -FlxG.width / 2, -FlxG.width / 2];
+
+	var thoughtBubble:FlxSprite;
+	var thoughtText:FlxText;
+
+	public function setBubblePosition(x:Float, y:Float, flip:Bool)
+	{
+		thoughtBubble.x = x * 2;
+		thoughtBubble.y = y * 2;
+		thoughtText.x = thoughtBubble.x + (thoughtBubble.width / 2) - (thoughtText.width / 2) + 10;
+		thoughtText.y = thoughtBubble.y + (thoughtBubble.height / 2) - (thoughtText.height / 2) - 10;
+		thoughtBubble.flipX = flip;
+	}
+
+	public function AHHHHHH()
+	{
+		thoughtBubble.x = FlxG.width - thoughtBubble.width - 128;
+		thoughtBubble.y = FlxG.height - thoughtBubble.width - 128;
+		thoughtBubble.flipX = true;
+	}
 
     public function new(?cam:FlxCamera) {
         super();
         camera = cam ?? BaseState.current.uiCamera;
         alpha = 0;
-        choices[1] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, RIGHT);
+		choices[1] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, LEFT);
         choices[1].screenCenter(Y);
-        choices[0] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, RIGHT);
+		choices[0] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, LEFT);
         choices[0].y = choices[1].y - choices[0].height - 16;
-        choices[2] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, RIGHT);
+		choices[2] = new FlxText(FlxG.width, 0, FlxG.width / 2).setFormat("assets/fonts/CaveatBrush.ttf", 28, 0xffeeeeee, LEFT);
         choices[2].y = choices[1].y + choices[0].height +  16;
+		for (i in choices)
+		{
+			i.setBorderStyle(OUTLINE, 0xff000000, 2);
+		}
         add(choices[0]);
         add(choices[1]);
         add(choices[2]);
         textbox = new FlxSprite().loadGraphic("assets/images/textBox.png");
         textbox.screenCenter(X);
-        textbox.y = FlxG.height - textbox.height - 16;
+		textbox.y = 16;
         add(textbox);
         nameSprite = new FlxSprite(96).loadGraphic("assets/images/nameTag.png");
         nameSprite.scale *= 0.5;
@@ -103,6 +125,21 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
                 cast (i, FlxSprite).scrollFactor.set();  
             }
         }
+		thoughtBubble = new FlxSprite().loadGraphic("assets/images/thoughtBubble.png", true, 295, 235);
+		thoughtBubble.animation.add("loop", [0, 1, 2], 6, true);
+		thoughtBubble.animation.play("loop");
+		thoughtBubble.x = FlxG.width - thoughtBubble.width - 128;
+		thoughtBubble.y = FlxG.height - thoughtBubble.width - 128;
+		thoughtBubble.visible = false;
+		thoughtBubble.flipX = true;
+		add(thoughtBubble);
+		thoughtText = new FlxText(thoughtBubble.x).setFormat("assets/fonts/CaveatBrush.ttf", 24, 0xff1f1f1f);
+		thoughtText.fieldWidth = thoughtBubble.width - 40;
+		thoughtText.fieldHeight = thoughtBubble.height / 2;
+		thoughtText.x = thoughtBubble.x + (thoughtBubble.width / 2) - (thoughtText.width / 2);
+		thoughtText.y = thoughtBubble.y + (thoughtBubble.height / 2) - (thoughtText.height / 2);
+		thoughtText.visible = false;
+		add(thoughtText);
     }
 
     public function fadeIn(?callback:Void->Void) {
@@ -110,11 +147,16 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
         alpha = 0;
         FlxTween.tween(this, {alpha: 1}, 1, {onComplete: (_) -> {
             nextTriangle.alpha = 0;
+				thoughtBubble.visible = true;
+				thoughtBubble.alpha = 0;
+				thoughtText.visible = true;
+				thoughtText.alpha = 0;
             if (callback != null) callback();
         }});
     }
 
     public function fadeOut(?callback:Void->Void) {
+		thoughtBubble.visible = thoughtText.visible = false;
         FlxTween.cancelTweensOf(this);
         alpha = 1;
         nextTriangle.alpha = 0;
@@ -123,6 +165,11 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
 
     public var inText:Bool = false;
     public function playNext() {
+		if (thoughtBubble.alpha > 0)
+		{
+			FlxTween.completeTweensOf(thoughtBubble);
+			FlxTween.tween(thoughtBubble, {alpha: 0}, 1);
+		}
         inText = true;
         nextTriangle.stopFlickering();
         //gameText.erase(0, true);
@@ -202,6 +249,11 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
     private var currentChoice:Int = 0;
     public function onTextComplete() {
         trace("completed");
+		if (currentMeta.thought != null)
+		{
+			thoughtText.text = currentMeta.thought;
+			FlxTween.tween(thoughtBubble, {alpha: 1}, 1);
+		}
         if (!currentMeta.isChoice && inText) {
             canProgress = true;
             nextTriangle.alpha = 1;
@@ -214,13 +266,14 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
                 choosing = true;
                 for (i in 0...3) {
                     choices[i].text = currentMeta.choices[i].text;
-                    lerps[i] = FlxG.width / 2 - 16;
+					lerps[i] = 16;
                 }
             }
         }
     }
 
     public override function update(elapsed:Float) {
+		thoughtText.alpha = thoughtBubble.alpha;
         super.update(elapsed);
         for (i in 0...3) {
             choices[i].x = FlxMath.lerp(lerps[i], choices[i].x, 1 - (elapsed * 9));
@@ -238,8 +291,9 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
             } else playNext();  
         } 
         if (choosing) {
-            for (i in 0...3) lerps[i] = FlxG.width / 2 - 16;
-            lerps[currentChoice] = FlxG.width / 2 - 48;
+			for (i in 0...3)
+				lerps[i] = 16;
+			lerps[currentChoice] = 48;
             if (FlxG.keys.anyJustPressed([UP, LEFT]))
                 currentChoice--;
             else if (FlxG.keys.anyJustPressed([DOWN, RIGHT]))
@@ -248,7 +302,8 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
             currentChoice %= 3;
             if (FlxG.keys.justPressed.Z) {
                 choosing = false;
-                for (i in 0...3) lerps[i] = FlxG.width;
+				for (i in 0...3)
+					lerps[i] = -FlxG.width / 2;
                 if (currentMeta.choices[currentChoice].correct) {
                     loadMetaContainer(currentMeta.choices[currentChoice].nextContainer);
                     strung = choosing = false; // double triple check
