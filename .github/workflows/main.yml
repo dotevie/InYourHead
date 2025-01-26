@@ -48,6 +48,7 @@ jobs:
           haxelib install openfl > /dev/null
           haxelib install flixel > /dev/null
           haxelib install flxgif > /dev/null
+          haxelib install asepriteatlas > /dev/null
           haxelib run lime setup --always
           haxelib run lime setup flixel --always
           haxelib git hscript-lore https://github.com/sayofthelor/hscript-lore legacy
@@ -89,6 +90,7 @@ jobs:
           haxelib install openfl > nul
           haxelib install flixel > nul
           haxelib install flxgif > nul
+          haxelib install asepriteatlas > nul
           haxelib run lime setup --always
           haxelib run lime setup flixel --always
           haxelib git hscript-lore https://github.com/sayofthelor/hscript-lore legacy
@@ -128,6 +130,7 @@ jobs:
           haxelib install openfl > /dev/null
           haxelib install flixel > /dev/null
           haxelib install flxgif > /dev/null
+          haxelib install asepriteatlas > /dev/null
           haxelib run lime setup -y
           haxelib run lime setup flixel -y
           haxelib git hscript-lore https://github.com/sayofthelor/hscript-lore legacy
