@@ -34,7 +34,7 @@ class GameState extends BaseState
 		gameui.loadMetaContainer("KevinIntro");
 		gameui.fadeIn(gameui.playNext);
 		AdaptiveAudioManager.play();
-		player = new Character(64);
+		player = new Character(64, "jin");
 		player.y = Main.STAGE_HEIGHT - player.height - 16;
 		player.flipX = true;
 		add(kevin =
