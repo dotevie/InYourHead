@@ -8,7 +8,7 @@
     "duration": 100
    },
    "thoughtBubble 1.aseprite": {
-    "frame": { "x": 295, "y": 0, "w": 295, "h": 235 },
+    "frame": { "x": 0, "y": 0, "w": 295, "h": 235 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 295, "h": 235 },
@@ -16,7 +16,15 @@
     "duration": 100
    },
    "thoughtBubble 2.aseprite": {
-    "frame": { "x": 590, "y": 0, "w": 295, "h": 235 },
+    "frame": { "x": 297, "y": 0, "w": 295, "h": 235 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 295, "h": 235 },
+    "sourceSize": { "w": 295, "h": 235 },
+    "duration": 100
+   },
+   "thoughtBubble 3.aseprite": {
+    "frame": { "x": 0, "y": 237, "w": 295, "h": 235 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 295, "h": 235 },
@@ -26,11 +34,13 @@
  },
  "meta": {
   "app": "https://www.aseprite.org/",
-  "version": "1.3.11-x64",
+  "version": "1.3.8.1-dev",
+  "image": "thoughtBubble.png",
   "format": "RGBA8888",
-  "size": { "w": 885, "h": 235 },
+  "size": { "w": 592, "h": 472 },
   "scale": "1",
   "frameTags": [
+   { "name": "Loop", "from": 0, "to": 3, "direction": "forward", "color": "#000000ff" }
   ],
   "layers": [
    { "name": "Sprite Sheet", "opacity": 255, "blendMode": "normal" }

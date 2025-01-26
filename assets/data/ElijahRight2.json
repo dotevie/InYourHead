@@ -1,0 +1,28 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name": "Elijah",
+            "text": "She was on the phone with someone...",
+            "thought": "Who was she talking to? I didn't hear a name...",
+            "isChoice": true,
+            "choices": [
+                {
+                    "text": "What did the person on the phone say?",
+                    "correct": false,
+                    "wrongAnswer": "I dunno, I didn't hear him"
+                },
+                {
+                    "text": "WHo was on the phone?",
+                    "correct": false,
+                    "wrongAnswer": "She didn't ever say a name."
+                },
+                {
+                    "text": "What did Allie say?",
+                    "correct": true,
+                    "nextContainer": "ElijahRight3"
+                }
+            ]
+        }
+    ]
+}

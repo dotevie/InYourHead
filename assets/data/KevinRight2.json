@@ -1,0 +1,27 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name": "Kevin",
+            "text": "Something happening to her? in MY building? No way!",
+            "isChoice": true,
+            "choices": [
+                {
+                    "text": "It's okay, I'm not gonna sue you.",
+                    "correct": true,
+                    "nextContainer": "KevinRight3"
+                },
+                {
+                    "text": "Other things have happened here before...",
+                    "correct": false,
+                    "wrongAnswer": "What other things? Hahahahaha, don't be silly."
+                },
+                {
+                    "text": "You're not worried about her?",
+                    "correct": false,
+                    "wrongAnswer": "Worried? Why would I be worried??"
+                }
+            ]
+        }
+    ]
+}

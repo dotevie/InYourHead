@@ -44,6 +44,22 @@ class AdaptiveAudioManager {
         sounds[track].fadeIn();
     }
 
+    public static function fadeOutAll() {
+        for (i in sounds) i.pause();
+    }
+
+    public static function reset() {
+        for (i in 0...sounds.length) {
+            var s = sounds.shift();
+            s.stop();
+            s.destroy();
+            FlxG.sound.defaultMusicGroup.remove(s);
+        }
+        sounds = [];
+        playing = false;
+        _firstPlayed = false;
+    }
+
     // run every second maybe??
     // certainly doesn't have to be every frame but i am NOT doing a conductor
     public static function sync() {

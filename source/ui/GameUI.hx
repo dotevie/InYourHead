@@ -14,6 +14,7 @@ import flixel.text.FlxText;
 import flixel.group.FlxGroup;
 
 using flixel.util.FlxSpriteUtil;
+using StringTools;
 
 typedef TaggedText = String; // just to be clear which of them gets tags read from it
 typedef Filename = String;
@@ -147,6 +148,7 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
     }
 
     public function playCurrent() {
+        nameField.text = currentMeta.name;
         gameText._finalText = currentMeta.text;
         gameText.color = 0xff333333; 
         gameText.start(0.035, true);
@@ -157,13 +159,15 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
         inText = true;
         strung = true;
         gameText._finalText = s;
+        if (s.startsWith("<color:0xff3333ff>(That")) nameField.text = "Jin";
         gameText.color = 0xff333333;
         gameText.start(0.035, true);
     }
 
     public var cache:Map<String, MetaTextContainer> = [];
-
+    public var loadedContainer:String;
     public function loadMetaContainer(name:String) {
+        loadedContainer = name;
         metaContainer = cache.get(name) ?? cast {cache.set(name,Json.parse(Assets.getText('assets/data/$name.json'))); cache.get(name);};
         for (i in metaContainer.cacheFiles) {
             if (!cache.exists(i)) {
@@ -226,8 +230,11 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
             nextTriangle.alpha = 0;
             FlxG.sound.play("assets/sounds/Next.wav", 0.15);
             if (strung) {
-                strung = false;
-                playCurrent();
+                if (gameText.text.startsWith("(That")) {
+                    strung = false;
+                    playCurrent();
+                }
+                else playString("<color:0xff3333ff>(That doesn't seem right...)");
             } else playNext();  
         } 
         if (choosing) {

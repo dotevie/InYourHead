@@ -1,0 +1,36 @@
+{
+    "cacheFiles": ["ElijahRight1", "ElijahRight2", "ElijahRight3"],
+    "texts": [
+        {
+            "name": "Elijah",
+            "text": "Hi, miss Jin!"
+        },
+        {
+            "name": "Jin",
+            "text": "Hi there, Elijah!"
+        },
+        {
+            "name": "Elijah",
+            "text": "We came to see Allie today! But Grandma told me she wasn't here...",
+            "thought": "I don't get why we're here if Allie's not...",
+            "isChoice": true,
+            "choices": [
+                {
+                    "text": "Why did she bring you here?",
+                    "correct": true,
+                    "nextContainer": "KevinRight1"
+                },
+                {
+                    "text": "You should be at home.",
+                    "correct": false,
+                    "wrongAnswer": "I wanna be! Grandma says we'll leave soon."
+                },
+                {
+                    "text": "Are you okay?",
+                    "correct": false,
+                    "wrongAnswer": "Why wouldn't I be?"
+                }
+            ]
+        }
+    ]
+}

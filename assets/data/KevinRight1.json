@@ -1,0 +1,40 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name": "Kevin",
+            "text": "I did text! Allie answered me, said she'd be ready when I arrived."
+        },
+        {
+            "name": "Kevin",
+            "text": "But she wasn't there. You guys know I charge when you're not there."
+        },
+        {
+            "name": "Kevin",
+            "text": "I guess your neighbors heard, because some lady came in - Gertrude?"
+        },
+        {
+            "name": "Kevin",
+            "text": "I don't know. Now we have a whole commotion here.",
+            "thought": "Weird Allie wasn't here. I hope nothing happened to her, I can't do a lawsuit.",
+            "isChoice": true,
+            "choices": [
+                {
+                    "text": "What was Gertrude saying?",
+                    "correct": false,
+                    "wrongAnswer": "I don't know. I almost had to escort her out. Such a hassle."
+                },
+                {
+                    "text": "Why are Mabel and Merlin down here?",
+                    "correct": false,
+                    "wrongAnswer": "I told you, they heard the commotion."
+                },
+                {
+                    "text": "Do you think something happened to her?",
+                    "correct": true,
+                    "nextContainer": "KevinRight2"
+                }
+            ]
+        }
+    ]
+}

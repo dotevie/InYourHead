@@ -1,0 +1,32 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name": "Elijah",
+            "text": "Grandma wanted to say something to Allie one last time."
+        },
+        {
+            "name":"Elijah",
+            "text":"I wanted to say something too, since it's the last time I'll see her.",
+            "thought": "Or it was, last time was wierd...",
+            "isChoice": true,
+            "choices": [
+                {
+                    "text": "What did she want to say to Allie?",
+                    "correct": false,
+                    "wrongAnswer": "I dunno, I don't think she likes her that much."
+                },
+                {
+                    "text": "What happened last time Allie babysat you?",
+                    "correct": false,
+                    "wrongAnswer": "She helped me draw a dinosaur! Grandma let me hang it!"
+                },
+                {
+                    "text": "What was Allie doing last time?",
+                    "correct": true,
+                    "nextContainer": "ElijahRight2"
+                }
+            ]
+        }
+    ]
+}

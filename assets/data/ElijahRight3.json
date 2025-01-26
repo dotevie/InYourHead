@@ -1,0 +1,15 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name": "Elijah",
+            "text": "Allie said something about paying something, I don't know",
+            "thought": "She was definitely talking about money... Why?"
+        },
+        {
+            "name": "Jin",
+            "text": "Thanks for all the help, Elijah.",
+            "callback": "complete:elijah"
+        }
+    ]
+}

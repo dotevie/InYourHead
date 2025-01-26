@@ -1,49 +1,30 @@
 package;
 
-import lime.utils.Assets;
-import flxgif.FlxGifSprite;
-import ui.GameUI;
-import backend.AdaptiveAudioManager;
-import flixel.util.FlxColor;
+import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.text.FlxText;
-import backend.CustomTypedText;
 
-class TitleState extends BaseState
-{
-	public var titleText:FlxText;
-	public var gameui:GameUI;
-	override public function create()
-	{
-		AdaptiveAudioManager.configure([
-			"assets/music/Track1.ogg",
-			"assets/music/Track2.ogg",
-			"assets/music/Track3.ogg",
-			"assets/music/Track4.ogg",
-			"assets/music/Track5.ogg"			
-		]);
-		super.create();
-		gameui = new GameUI();
-		add(gameui);
-		gameui.loadMetaContainer("KevinIntro");
-		gameui.fadeIn(gameui.playNext);
-		//AdaptiveAudioManager.play();
-	}
 
-	function doFadeOut() {
-		gameui.fadeOut(AdaptiveAudioManager.play);
-	}
+class TitleState extends BaseState {
+    var titleText:FlxText;
+    var pressText:FlxText;
 
-    function onTag(n) {
-        FlxG.camera.flash(FlxColor.WHITE, 0.25);
+    override public function create() {
+        super.create();
+        titleText = new FlxText(10, 50, FlxG.width - 20, "In Your Head (maybe)").setFormat("assets/fonts/CaveatBrush.ttf", 96, CENTER);
+        pressText = new FlxText(10, 10, FlxG.width - 20, "Press Z to Start").setFormat("assets/fonts/CaveatBrush.ttf", 64, CENTER);
+        pressText.y = FlxG.height - pressText.height - 50;
+        titleText.camera = pressText.camera = uiCamera;
+        add(titleText);
+        add(pressText);
     }
 
-	var thing = 0;
-	override public function update(elapsed:Float)
-	{
-		super.update(elapsed);
-		if (FlxG.keys.justPressed.SPACE && thing < 4) {
-			AdaptiveAudioManager.fadeIn(++thing);
-		}
-	}
+    public var starting:Bool = false;
+    override public function update(elapsed:Float) {
+        super.update(elapsed);
+        if (FlxG.keys.justPressed.Z && !starting) {
+            starting = true;
+            FlxTween.tween(uiCamera, {alpha: 0}, 1, {onComplete: (_) -> FlxG.switchState(GameState.new)});
+        }
+    }
 }

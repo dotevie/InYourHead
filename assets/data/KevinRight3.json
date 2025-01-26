@@ -1,0 +1,26 @@
+{
+    "cacheFiles": [],
+    "texts": [
+        {
+            "name": "Kevin",
+            "text": "You're not gonna sue me? Well then... Maybe something happened."
+        }, 
+        {
+            "name": "Kevin",
+            "text": "I dunno what, you can talk to the people in the lobby about it."
+        },
+        {
+            "name": "Kevin",
+            "text": "Tell me the story when you find it out, but so I know you won't sue."
+        },
+        {
+            "name": "Jin",
+            "text": "Fine."
+        },
+        {
+            "name": "Jin",
+            "text": "<color:0xff3333ff>(This guy sucks.)",
+            "callback": "complete:kevin"
+        }
+    ]
+}
