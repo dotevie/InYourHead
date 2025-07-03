@@ -100,7 +100,7 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
         nameSprite = new FlxSprite(96).loadGraphic("assets/images/nameTag.png");
         nameSprite.scale *= 0.5;
         nameSprite.updateHitbox();
-        nameSprite.y = textbox.y - nameSprite.height + 48;
+		nameSprite.y = textbox.y - nameSprite.height + 72;
         add(nameSprite);
         nameField = new FlxText(nameSprite.x, 0, nameSprite.width).setFormat("assets/fonts/CaveatBrush.ttf", 48, 0xff333333, CENTER);
         nameField.y = nameSprite.y + (nameSprite.height / 2) - (nameField.height / 2);
@@ -109,7 +109,7 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
         gameText.setFormat("assets/fonts/CaveatBrush.ttf", 48, 0xff1f1f1f, LEFT);
         gameText.fieldHeight = 140;
         gameText.y = textbox.y + (textbox.height / 2) - (gameText.fieldHeight / 2) + 10;
-        gameText.delay = 0.035;
+		gameText.delay = 0.05;
         gameText.useDefaultSound = true;
         gameText.tagCallback = onTag;
         gameText.completeCallback = onTextComplete;
@@ -247,8 +247,8 @@ class GameUI extends FlxTypedSpriteGroup<FlxSprite> {
     public var canProgress:Bool = false;
     public var choosing:Bool = false;
     private var currentChoice:Int = 0;
-    public function onTextComplete() {
-        trace("completed");
+	public function onTextComplete()
+	{
 		if (currentMeta.thought != null)
 		{
 			thoughtText.text = currentMeta.thought;

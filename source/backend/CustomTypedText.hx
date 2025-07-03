@@ -470,7 +470,8 @@ class CustomTypedText extends FlxText
 				}
 
                 ticker++;
-                if (ticker % 2 == 0) {
+				if (ticker % 2 == 0)
+				{
                     if (sounds != null && !useDefaultSound)
                     {
                         if (!finishSounds)
@@ -524,9 +525,12 @@ class CustomTypedText extends FlxText
 		{
 			text = helperString;
             if (text.endsWith(",") 
-                || text.endsWith(".")
-                || text.endsWith("?")
-                || text.endsWith("!")) _timer -= 0.15;
+				|| (text.endsWith(".") && !_finalText.contains("..."))
+				|| text.endsWith("...")
+				|| text.endsWith("?")
+				|| text.endsWith("-")
+				|| text.endsWith("!"))
+				_timer -= 0.15;
             if (text.endsWith(" ")) ticker = 0;
 
 			// If we're done typing, call the onComplete() function
